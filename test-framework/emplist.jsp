@@ -7,6 +7,8 @@
     <title>Document</title>
 </head>
 <body>
-    <p>bonjour</p>
+    <% String valeur= (String)request.getAttribute("emp-insert");
+        out.print(valeur);
+    %>
 </body>
 </html>

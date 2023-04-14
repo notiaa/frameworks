@@ -1,4 +1,5 @@
-package etu1755.framework;
+package testFrameWork;
+import framework.bin.etu1755.annotation.Url;
 
 public class Emp {
     String nom;

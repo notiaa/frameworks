@@ -7,6 +7,12 @@ public class Emp {
     public ModelView insert(){
         ModelView mv = new ModelView();
         mv.setView("../emplist.jsp");
+        List<String> nom = new ArrayList<>();
+        nom.addItem("notia");
+        nom.addItem("test");
+        HashMap<String,Object> hashmap = new HashMap<>();
+        hashmap.put("donne",nom);
+        mv.set(
         return mv;
     }
 }

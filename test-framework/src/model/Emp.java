@@ -1,4 +1,7 @@
 package model;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import etu1755.annotation.Url;
 import etu1755.framework.ModelView;
 
@@ -12,7 +15,7 @@ public class Emp {
         nom.addItem("test");
         HashMap<String,Object> hashmap = new HashMap<>();
         hashmap.put("donne",nom);
-        mv.set(
+        mv.setData(hashmap);
         return mv;
     }
 }

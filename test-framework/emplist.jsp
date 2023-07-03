@@ -1,7 +1,7 @@
-<%@ page import ="java.util.List" %>
+<!-- <%@ page import ="java.util.List" %>
 <%
     List<String> nom = (List<String>)request.getAttribute("donne");
-%>
+%> -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,10 +11,19 @@
     <title>Document</title>
 </head>
 <body>
-    <%
+    <!-- <%
         for(String s : nom){ %>
             <p><%= s %></p>
         <% }
+    %> -->
+    
+    <%@ page import ="model.Emp" %>
+    <%
+            Emp emp = (Emp)request.getAttribute("objet");
+            String nom = emp.getNom();
     %>
+
+    <h4> <%= nom %> </h4>
+    
 </body>
 </html>

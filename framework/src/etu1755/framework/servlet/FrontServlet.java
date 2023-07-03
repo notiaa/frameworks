@@ -6,7 +6,10 @@ import etu1755.framework.Mapping;
 import etu1755.framework.ModelView;
 import utils.PackageTool;
 import java.io.*;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 
 public class FrontServlet extends HttpServlet{
@@ -41,6 +44,29 @@ public class FrontServlet extends HttpServlet{
                     Object valeur=mv.getData().get(cle);
                     req.setAttribute(cle, valeur);
                 }
+                ArrayList<String> array = new ArrayList<>();
+                Field[] attribut = act.getClass().getDeclaredFields();
+                Method[] methods = act.getClass().getDeclaredMethods();
+                ArrayList<String> don = new ArrayList<>();
+                Enumeration<String> nom = req.getParameterNames();
+                while (nom.hasMoreElements()) {
+                    array.add(nom.nextElement());
+                }
+                for (Field i : attribut) {
+                    don.add(i.getName());
+                }
+                for (String string : array) {
+                    if (don.contains(string)) {
+                        for (Method method : methods) {
+                            String setters = "set"+string;
+                            if (method.getName().equalsIgnoreCase(setters)) {
+                                method.invoke(act, req.getParameter(string));
+                            }
+                        }
+                    }
+                }
+
+                req.setAttribute("objet", act);
                 RequestDispatcher requestDispatcher = req.getRequestDispatcher(mv.getView()) ;    
                 requestDispatcher.forward(req,res);
             } catch (Exception e) {

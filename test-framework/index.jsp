@@ -7,6 +7,10 @@
     <title>Document</title>
 </head>
 <body>
-    <a href="process/emp-insert">Test</a>
+    <form action="process/emp-insert" method="get">
+        <input type="text" name="nom">
+        <input type="submit" value="valider">
+    </form>
+    
 </body>
 </html>

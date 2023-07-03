@@ -1,3 +1,7 @@
+<%@ page import ="java.util.List" %>
+<%
+    List<String> nom = (List<String>)request.getAttribute("donne");
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,8 +11,10 @@
     <title>Document</title>
 </head>
 <body>
-    <% String valeur= (String)request.getAttribute("emp-insert");
-        out.print(valeur);
+    <%
+        for(String s : nom){ %>
+            <p><%= s %></p>
+        <% }
     %>
 </body>
 </html>

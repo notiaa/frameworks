@@ -37,10 +37,9 @@ public class FrontServlet extends HttpServlet{
             try {
                 Object act = Class.forName(urlMapping.get(url).getClassName()).newInstance();
                 ModelView mv = (ModelView)act.getClass().getDeclaredMethod(urlMapping.get(url).getMethod()).invoke(act);
-                mv.addItem(url,"Valeur");
                 for(String cle:mv.getData().keySet()){
                     Object valeur=mv.getData().get(cle);
-                    req.setAttribute(url, valeur);
+                    req.setAttribute(cle, valeur);
                 }
                 RequestDispatcher requestDispatcher = req.getRequestDispatcher(mv.getView()) ;    
                 requestDispatcher.forward(req,res);

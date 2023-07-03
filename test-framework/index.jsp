@@ -7,10 +7,12 @@
     <title>Document</title>
 </head>
 <body>
-    <form action="process/emp-insert" method="get">
+    <!-- <form action="process/emp-insert" method="get">
         <input type="text" name="nom">
         <input type="submit" value="valider">
-    </form>
+    </form> -->
+
+    <a href="process/emp-testParam?idNom=4&&age=10">testttttttt</a>
     
 </body>
 </html>

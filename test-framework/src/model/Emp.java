@@ -21,6 +21,18 @@ public class Emp {
         mv.setData(hashmap);
         return mv;
     }
+    @Url(url="emp-testParam",param={"idNom","age"})
+    public ModelView testParam(String idNom,String age){
+        String id = idNom;
+        String year = age;
+        ModelView mv = new ModelView();
+        mv.setView("../emplist.jsp");
+        HashMap<String,Object> hashmap = new HashMap<>();
+        hashmap.put("ids",id);
+        hashmap.put("ages",year);
+        mv.setData(hashmap);
+        return mv;
+    }
 
     public int getId() {
         return id;

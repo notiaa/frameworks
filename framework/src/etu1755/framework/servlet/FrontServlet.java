@@ -3,6 +3,7 @@ import jakarta.servlet.*;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.*;
 import etu1755.annotation.Url;
+import etu1755.annotation.Scope;
 import etu1755.framework.FileUpload;
 import etu1755.framework.Mapping;
 import etu1755.framework.ModelView;
@@ -11,24 +12,33 @@ import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 
 
+
 @MultipartConfig
 public class FrontServlet extends HttpServlet{
     HashMap<String,Mapping> urlMapping = new HashMap<>();
+    HashMap<String,Object> single=new HashMap<>();
 
     @Override
     public void init() throws ServletException {
         try {
             for (Class c : PackageTool.inPackage(getServletConfig().getInitParameter("model"))){
+                if(((Scope)c.getAnnotation(Scope.class)).scope().equals("singleton")){
+                    single.put(c.getName(),c.newInstance());
+                }
                 for (Method m : c.getDeclaredMethods()){
                     if(m.isAnnotationPresent(Url.class)){
                         urlMapping.put(m.getAnnotation(Url.class).url(), new Mapping(c.getName(), m.getAnnotation(Url.class).url().split("-")[1]));
                     }
+                    
+
                 }
+
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -108,7 +118,28 @@ public class FrontServlet extends HttpServlet{
         out.println(url);
         if(urlMapping.containsKey(url)){
             try {
-    
+//sprint10
+                Object act=null;
+                  ModelView mv =null;
+                if(single.get(urlMapping.get(url).getClassName())!=null){
+                    String className = urlMapping.get(url).getClassName();
+                    Object singleObject = single.get(className);
+                      Field[] attribut = singleObject.getClass().getDeclaredFields();
+                    List<String> attributNoms = new ArrayList<String>();
+
+                    for (Field field : attribut) {
+                        System.out.println(field.getName());
+                        attributNoms.add(field.getName());
+                    }
+                    Method methody = getMethode(singleObject.getClass(),urlMapping.get(url).getMethod(), url);
+                    mv =(ModelView)methody.invoke(singleObject);
+                      req.setAttribute("list", attributNoms);
+                      
+                }
+                else{
+                     act = Class.forName(urlMapping.get(url).getClassName()).newInstance();
+                }
+                try{
 //FileUpload
             if (req.getContentType() != null) {
                 ArrayList<FileUpload> allUploads = new ArrayList<FileUpload>();
@@ -136,10 +167,10 @@ public class FrontServlet extends HttpServlet{
                 }
 //sprint 6  
                 ArrayList<String> get = new ArrayList<>();
-                Object act = Class.forName(urlMapping.get(url).getClassName()).newInstance();
+               
                 Method methody = getMethode(act.getClass(),urlMapping.get(url).getMethod(), url);
                 get=getValeurParam(req, methody);
-                ModelView mv =(ModelView)methody.invoke(act,get.toArray());
+                mv =(ModelView)methody.invoke(act,get.toArray());
                 for(String cle:mv.getData().keySet()){
                     Object valeur=mv.getData().get(cle);
                     req.setAttribute(cle, valeur);
@@ -172,15 +203,24 @@ public class FrontServlet extends HttpServlet{
                     out.println("ito"+String.valueOf(valeur));
                 }
                 req.setAttribute("objet", act);
+              
 
+               
+            }
+            
+            catch(Exception e){
 
-                RequestDispatcher requestDispatcher = req.getRequestDispatcher(mv.getView()) ;    
+            }
+              RequestDispatcher requestDispatcher = req.getRequestDispatcher(mv.getView()) ;    
                 requestDispatcher.forward(req,res);
+             
+        
             } catch (Exception e) {
                     e.printStackTrace();
                     out.println(e);
             }
         }
+       
     }
 
     protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException{
